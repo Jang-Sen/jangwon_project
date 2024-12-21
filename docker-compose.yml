@@ -20,15 +20,16 @@ services:
     container_name: jangwon_backend_01
     build:
       dockerfile: Dockerfile
-      context: ./backend
+      context: backend
       target: development
     volumes:
       - ./backend:/usr/src/app
     env_file:
-      - .env
+      - backend/.env
     command: npm run start:dev
     ports:
-      - "${BACKEND_PORT}:${BACKEND_PORT}"
+      #      - "${BACKEND_PORT}:${BACKEND_PORT}"
+      - "8000:8000"
     depends_on:
       - jangwon_postgres
       - jangwon_redis
@@ -39,16 +40,17 @@ services:
   jangwon_backend_02:
     container_name: jangwon_backend_02
     build:
-      dockerfile: backend/Dockerfile
-      context: ./backend
+      dockerfile: Dockerfile
+      context: backend
       target: development
     volumes:
       - ./backend:/usr/src/app
     env_file:
-      - .env
+      - backend/.env
     command: npm run start:dev
     ports:
-      - "${BACKEND_02_PORT}:${BACKEND_PORT}"
+      #      - "${BACKEND_02_PORT}:${BACKEND_PORT}"
+      - "8001:8000"
     depends_on:
       - jangwon_postgres
       - jangwon_redis
@@ -60,9 +62,10 @@ services:
     image: postgres:latest
     restart: always
     env_file:
-      - ./backend/docker.env
+      - backend/docker.env
     ports:
-      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+      #      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+      - "5432:5432"
     networks:
       - jangwon-networks
 
@@ -73,7 +76,8 @@ services:
     env_file:
       - ./backend/docker.env
     ports:
-      - "${REDIS_PORT}:${REDIS_PORT}"
+      #      - "${REDIS_PORT}:${REDIS_PORT}"
+      - "6379:6379"
     networks:
       - jangwon-networks
 
@@ -85,7 +89,7 @@ services:
     #    volumes:
     #      - ./minio_storage:/data
     env_file:
-      - ./backend/docker.env
+      - backend/docker.env
     ports:
       - "9000:9000"
       - "9001:9001"
