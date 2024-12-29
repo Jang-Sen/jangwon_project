@@ -11,19 +11,38 @@ services:
       - "80:80"
       - "443:443"
     depends_on:
+      - jangwon_frontend
       - jangwon_backend_01
       - jangwon_backend_02
+      - jangwon_minio
+    networks:
+      - jangwon-networks
+
+  jangwon_frontend:
+    container_name: jangwon_frontend
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/usr/src/frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - jangwon_backend_01
+      - jangwon_minio
+    stdin_open: true
+    tty: true
     networks:
       - jangwon-networks
 
   jangwon_backend_01:
     container_name: jangwon_backend_01
     build:
-      dockerfile: Dockerfile
       context: backend
+      dockerfile: Dockerfile
       target: development
     volumes:
-      - ./backend:/usr/src/app
+      - ./backend:/usr/src/backend
     env_file:
       - backend/.env
     command: npm run start:dev
@@ -44,7 +63,7 @@ services:
       context: backend
       target: development
     volumes:
-      - ./backend:/usr/src/app
+      - ./backend:/usr/src/backend
     env_file:
       - backend/.env
     command: npm run start:dev
