@@ -108,7 +108,7 @@ services:
     #    volumes:
     #      - ./minio_storage:/data
     env_file:
-      - backend/docker.env
+      - ./backend/docker.env
     ports:
       - "9000:9000"
       - "9001:9001"
