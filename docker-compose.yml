@@ -1,3 +1,5 @@
+version: "3.8" # 버전을 명시합니다.
+
 services:
   jangwon_nginx:
     image: nginx:stable-alpine
@@ -16,7 +18,7 @@ services:
       - jangwon_backend_02
       - jangwon_minio
     networks:
-      - jangwon-networks
+      - jangwon_networks
 
   jangwon_frontend:
     container_name: jangwon_frontend
@@ -33,7 +35,7 @@ services:
     stdin_open: true
     tty: true
     networks:
-      - jangwon-networks
+      - jangwon_networks
 
   jangwon_backend_01:
     container_name: jangwon_backend_01
@@ -47,20 +49,19 @@ services:
       - backend/.env
     command: npm run start:dev
     ports:
-      #      - "${BACKEND_PORT}:${BACKEND_PORT}"
       - "8000:8000"
     depends_on:
       - jangwon_postgres
       - jangwon_redis
       - jangwon_minio
     networks:
-      - jangwon-networks
+      - jangwon_networks
 
   jangwon_backend_02:
     container_name: jangwon_backend_02
     build:
-      dockerfile: Dockerfile
       context: backend
+      dockerfile: Dockerfile
       target: development
     volumes:
       - ./backend:/usr/src/backend
@@ -68,13 +69,12 @@ services:
       - backend/.env
     command: npm run start:dev
     ports:
-      #      - "${BACKEND_02_PORT}:${BACKEND_PORT}"
       - "8001:8000"
     depends_on:
       - jangwon_postgres
       - jangwon_redis
     networks:
-      - jangwon-networks
+      - jangwon_networks
 
   jangwon_postgres:
     container_name: jangwon_postgres
@@ -83,10 +83,9 @@ services:
     env_file:
       - backend/docker.env
     ports:
-      #      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
       - "5432:5432"
     networks:
-      - jangwon-networks
+      - jangwon_networks
 
   jangwon_redis:
     container_name: jangwon_redis
@@ -95,26 +94,21 @@ services:
     env_file:
       - ./backend/docker.env
     ports:
-      #      - "${REDIS_PORT}:${REDIS_PORT}"
       - "6379:6379"
     networks:
-      - jangwon-networks
+      - jangwon_networks
 
   jangwon_minio:
-    #    image: quay.io/minio/minio:RELEASE.2024-11-07T00-52-20Z
     container_name: jangwon_minio
     image: docker.io/bitnami/minio:2022
-    #    command: server --address ":9000" --console-address ":9001" /data
-    #    volumes:
-    #      - ./minio_storage:/data
     env_file:
       - ./backend/docker.env
     ports:
       - "9000:9000"
       - "9001:9001"
     networks:
-      - jangwon-networks
+      - jangwon_networks
 
 networks:
-  jangwon-networks:
+  jangwon_networks: # 이름 수정
     driver: bridge
