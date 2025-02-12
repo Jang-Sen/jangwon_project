@@ -17,7 +17,7 @@ server {
     ssl_certificate .cert/cert.pem;
     ssl_certificate_key .cert/key.pem;
 
-    server_name 211.49.53.89;
+    server_name jangsen.duckdns.org;
 
     charset utf-8;
     client_max_body_size 500M;
