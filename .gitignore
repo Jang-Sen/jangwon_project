@@ -1,2 +1,3 @@
 .cert
 .idea
+.env.docker
